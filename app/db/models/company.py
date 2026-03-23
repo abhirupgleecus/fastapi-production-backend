@@ -7,6 +7,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.db.base import Base
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.db.models.user import User
+
 
 class Company(Base):
     __tablename__ = "companies"
@@ -22,9 +27,7 @@ class Company(Base):
         nullable=False,
         unique=True,
     )
-    description: Mapped[str] = mapped_column(
-        Text,
-        nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -37,7 +40,7 @@ class Company(Base):
         nullable=False,
     )
 
-    users: Mapped[list["User"]]=relationship(
+    users: Mapped[list["User"]] = relationship(
         "User",
         back_populates="company",
     )

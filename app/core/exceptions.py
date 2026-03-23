@@ -7,11 +7,14 @@ class BaseAppException(Exception):
 class NotFoundException(BaseAppException):
     pass
 
+
 class ConflictException(BaseAppException):
     pass
 
+
 class ForbiddenException(BaseAppException):
     pass
+
 
 class UnauthorizedException(BaseAppException):
     pass

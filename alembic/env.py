@@ -1,17 +1,14 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 
 import asyncio
 
-from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from alembic import context
 
 from app.db.base import Base
 from app.core.config import get_settings
@@ -64,9 +61,7 @@ def run_migrations_offline() -> None:
 def run_migrations_online():
     settings = get_settings()
 
-    config_section = context.config.get_section(
-        context.config.config_ini_section
-    )
+    config_section = context.config.get_section(context.config.config_ini_section)
     config_section["sqlalchemy.url"] = settings.DATABASE_URL
 
     connectable = async_engine_from_config(

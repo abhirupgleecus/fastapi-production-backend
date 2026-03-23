@@ -5,7 +5,7 @@ from app.db.session import get_db
 from app.api.dependencies import get_current_active_user
 from app.db.models.user import User
 
-from app.schemas.company import(
+from app.schemas.company import (
     CompanyCreateSchema,
     CompanyUpdateSchema,
     CompanyResponseSchema,
@@ -13,10 +13,13 @@ from app.schemas.company import(
 
 from app.services.company_service import CompanyService
 
-router = APIRouter(prefix="/companies",tags=["companies"])
+router = APIRouter(prefix="/companies", tags=["companies"])
 
-#Create company(public route)
-@router.post("/", response_model=CompanyResponseSchema, status_code=status.HTTP_201_CREATED)
+
+# Create company(public route)
+@router.post(
+    "/", response_model=CompanyResponseSchema, status_code=status.HTTP_201_CREATED
+)
 async def create_company(
     payload: CompanyCreateSchema,
     db: AsyncSession = Depends(get_db),
@@ -29,26 +32,32 @@ async def create_company(
 
     return CompanyResponseSchema.model_validate(company)
 
-#Get company
-@router.get("/my_company", response_model=CompanyResponseSchema, status_code=status.HTTP_200_OK)
+
+# Get company
+@router.get(
+    "/my_company", response_model=CompanyResponseSchema, status_code=status.HTTP_200_OK
+)
 async def get_company(
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     service = CompanyService(db)
 
-    company = await service.get_company(
-        company_id=current_user.company_id
-    )
+    company = await service.get_company(company_id=current_user.company_id)
 
     return CompanyResponseSchema.model_validate(company)
 
-#Update company
-@router.put("/update_my_company", response_model=CompanyResponseSchema, status_code=status.HTTP_200_OK)
+
+# Update company
+@router.put(
+    "/update_my_company",
+    response_model=CompanyResponseSchema,
+    status_code=status.HTTP_200_OK,
+)
 async def update_company(
     payload: CompanyUpdateSchema,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     service = CompanyService(db)
 
@@ -60,16 +69,15 @@ async def update_company(
 
     return CompanyResponseSchema.model_validate(company)
 
-#Delete company
+
+# Delete company
 @router.delete("/delete_my_company", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_company(
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     service = CompanyService(db)
 
-    await service.delete_company(
-        company_id=current_user.company_id
-    )
+    await service.delete_company(company_id=current_user.company_id)
 
     return None

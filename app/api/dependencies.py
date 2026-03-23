@@ -11,18 +11,19 @@ from app.db.models.user import User
 
 ouath2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
+
 async def get_current_user(
     db: AsyncSession = Depends(get_db),
     token: str = Depends(ouath2_scheme),
-)-> User:
+) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    
+
     try:
-        payload=jwt.decode(
+        payload = jwt.decode(
             token,
             get_settings().JWT_SECRET_KEY,
             algorithms=[get_settings().JWT_ALGORITHM],
@@ -40,9 +41,10 @@ async def get_current_user(
         raise credentials_exception
     return user
 
+
 async def get_current_active_user(
     current_user: User = Depends(get_current_user),
-)-> User:
+) -> User:
     if current_user.is_active is False:
         raise HTTPException(status_code=403, detail="Inactive user")
     return current_user
