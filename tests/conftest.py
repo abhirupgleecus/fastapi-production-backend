@@ -1,5 +1,6 @@
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
+import os
 
 from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import (
@@ -12,7 +13,10 @@ from app.main import app
 from app.db.base import Base
 from app.db.session import get_db
 
-TEST_DATABASE_URL = "postgresql+asyncpg://postgres:password@db:5432/app_test_db"
+TEST_DATABASE_URL = os.getenv(
+    "TEST_DATABASE_URL",
+    "postgresql+asyncpg://postgres:password@db:5432/app_test_db",
+)
 
 # Create test engine
 engine = create_async_engine(TEST_DATABASE_URL, echo=False, poolclass=NullPool)
