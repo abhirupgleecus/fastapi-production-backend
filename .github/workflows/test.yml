@@ -39,5 +39,9 @@ jobs:
         env:
           TEST_DATABASE_URL: postgresql+asyncpg://postgres:password@localhost:5432/app_test_db
           PYTHONPATH: .
+          DATABASE_URL: postgresql+asyncpg://postgres:password@localhost:5432/app_test_db
+          JWT_SECRET_KEY: testsecret
+          JWT_ALGORITHM: HS256
+          JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 30
         run: |
           pytest -v
