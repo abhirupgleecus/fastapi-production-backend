@@ -64,7 +64,7 @@ class UserService:
             hashed_password=hashed_password,
             company_id=company_id,
         )
-
+        await self.db.commit()
         await self.db.refresh(user)
 
         return user
@@ -117,7 +117,7 @@ class UserService:
             full_name=full_name,
             hashed_password=hashed_password,
         )
-
+        await self.db.commit()
         await self.db.refresh(updated_user)
 
         return updated_user
@@ -133,3 +133,4 @@ class UserService:
             raise NotFoundException("User not found.")
         await self._ensure_same_company(current_user=current_user, target_user=user)
         await self.user_repo.delete(user)
+        await self.db.commit()

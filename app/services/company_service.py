@@ -34,7 +34,7 @@ class CompanyService:
             raise ConflictException(f"Company with name {name} already exists.")
 
         company = await self.company_repo.create(name=name, description=description)
-
+        await self.db.commit()
         await self.db.refresh(company)
 
         return company
@@ -70,7 +70,7 @@ class CompanyService:
             raise NotFoundException(f"Company with id {company_id} not found.")
 
         # Ensure name is unique
-        if name is None:
+        if name is not None:
             existing_company = await self.company_repo.get_by_name(name)
             if existing_company is not None and existing_company.id != company_id:
                 raise ConflictException(f"Company with name {name} already exists.")
@@ -78,7 +78,7 @@ class CompanyService:
         updated_company = await self.company_repo.update(
             company, name=name, description=description
         )
-
+        await self.db.commit()
         await self.db.refresh(updated_company)
 
         return updated_company
@@ -114,3 +114,5 @@ class CompanyService:
 
         # delete company after
         await self.company_repo.delete(company)
+
+        await self.db.commit()

@@ -53,7 +53,7 @@ class AuthService:
             hashed_password=hashed_password,
             company_id=company_id,
         )
-
+        await self.db.commit()
         await self.db.refresh(user)
 
         return user
